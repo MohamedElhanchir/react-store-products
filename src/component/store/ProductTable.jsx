@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import Rating from "./Rating";
-import { Form } from "react-bootstrap";
+
+
 const customStyles = {
   rows: {
     style: {
@@ -23,28 +24,8 @@ const customStyles = {
   },
 };
 
-function ProductTable({ products }) {
+function ProductTable({ products, selectedCategories }) {
   const [filterText, setFilterText] = useState("");
-  const [categoryList, setCategoryList] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-
-  useEffect(() => {
-    getCategories();
-  }, []);
-
-  const getCategories = () => {
-    fetch("https://fakestoreapi.com/products/categories")
-      .then((response) => response.json())
-      .then((response) => setCategoryList(response));
-  };
-
-  const handleCategoryChange = (category, isChecked) => {
-    if (isChecked) {
-      setSelectedCategories([...selectedCategories, category]);
-    } else {
-      setSelectedCategories(selectedCategories.filter((c) => c !== category));
-    }
-  };
 
   // Filtre les produits basés sur le texte de recherche
   const filteredProducts = useMemo(() => {
@@ -123,20 +104,6 @@ function ProductTable({ products }) {
 
   return (
     <div>
-      <Form>
-        {categoryList.map((category) => (
-          <Form.Check
-            inline
-            key={category}
-            type="checkbox"
-            id={category}
-            label={category}
-            checked={selectedCategories.includes(category)}
-            onChange={(e) => handleCategoryChange(category, e.target.checked)}
-          />
-        ))}
-      </Form>
-
       <div className="table-responsive">
         <DataTable
           columns={columns}
